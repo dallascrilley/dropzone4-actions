@@ -33,7 +33,7 @@ This action allows users to quickly convert a dropped image to JPG format using 
 This action lets you copy the contents of one or more text or code files to the clipboard, with a newline separating the contents of different files.
 
 - **Name**: Copy Text and Code Files to Clipboard
-- **Description**: Copy contents of dropped text/code files to the clipboard, separated by newlines.
+- **Description**: Copy contents of dropped text/code files to the clipboard, separated by start and end comments containing the file name and path.
 - **Handles**: Files
 - **Creator**: Dallas Crilley
 - **URL**: [dallascrilley.com](https://dallascrilley.com)
@@ -44,14 +44,17 @@ This action lets you copy the contents of one or more text or code files to the 
 - **MinDropzoneVersion**: 3.0
 
 #### Supported File Types:
+This action supports a broad range of text and code files. In addition to the common types, it now supports many more file types, each handled with the appropriate comment tokens:
+
 - Text Files: `txt`, `md`, `rtf`
 - Code Files: `js`, `py`, `html`, `css`, `java`, `cpp`, `php`, `ts`, and many more (full list included in the action).
+- Build and configuration files: `Makefile`, `Dockerfile`, `gradle`, `log`, `properties`, `ini`, `json`, `csv`, `tsv`, `sql`, `tex`, `yaml`, `yml`
 
 #### Example Usage:
 
-1. Drag and drop one or more supported text/code files.
-2. The contents of the files are copied to your clipboard, with a newline separating each file’s contents.
-3. If a file type is unsupported, an error message will appear.
+1. Drag and drop one or more supported text/code files onto the action.
+2. The contents of the files are read, wrapped with header and footer comments (including the file’s relative path and name), and then concatenated together with a newline separating each file’s contents.
+3. If a file is unsupported or if an error occurs during processing (such as trying to read a binary file), an error message will appear.
 
 ## Installation
 
