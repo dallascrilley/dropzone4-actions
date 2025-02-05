@@ -99,7 +99,7 @@ def dragged
     "xml", "yaml", "yml", "json", "ini", "toml", "properties",
     "csv", "tsv", "sql", "rtf", "tex", "tsx", "less", "sass",
     "scss", "ps1", "bat", "cmd", "Dockerfile", "Makefile",
-    "gradle", "log" # Extendable list of file extensions.
+    "gradle", "log", "jsx" # Extendable list of file extensions.
   ]
 
   $dz.begin("Copying files to clipboard...")
