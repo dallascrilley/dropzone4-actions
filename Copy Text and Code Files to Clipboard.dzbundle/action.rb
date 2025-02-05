@@ -7,7 +7,7 @@
 # Events: Dragged
 # SkipConfig: Yes
 # RunsSandboxed: No
-# Version: 1.2
+# Version: 1.4
 # MinDropzoneVersion: 3.0
 
 # A list of regex patterns for directory or file names to ignore.
@@ -27,6 +27,18 @@ IGNORED_PATTERNS = [
   /^thumbs\.db$/i,
   /pycache/i  # This pattern will match any variation that contains "pycache"
 ]
+
+# Grouping of file extensions by comment tokens.
+# Each element is an array where the first element is a regex that matches one or more file extensions,
+# and the second element is an array with the comment start and end tokens.
+COMMENT_TOKEN_GROUPS = [
+  [ /^(py|rb|sh)$/i,    ["# ", ""] ],
+  [ /^html?$/i,         ["<!-- ", " -->"] ],
+  [ /^(jsx|tsx|ts)$/i,  ["/* ", " */"] ]
+]
+
+# Default comment tokens if no group matches.
+DEFAULT_COMMENT_TOKENS = ["// ", ""]
 
 def ignore_path?(path)
   # Split the path into components and check if any match the ignored patterns.
@@ -66,7 +78,30 @@ def process_as_text(file, file_contents)
     parent_directory = File.dirname(file)
     truncated_path = truncate_path(parent_directory)
     filename = File.basename(file)
-    file_contents << "// #{truncated_path}/#{filename}\n#{content}"
+
+    # Determine the file extension (without the dot).
+    ext = File.extname(file).downcase.sub('.', '')
+    
+    # Find the comment tokens based on the extension using our grouped regex.
+    comment_tokens = COMMENT_TOKEN_GROUPS.find { |pattern, _| ext.match?(pattern) }
+    comment_start, comment_end = comment_tokens ? comment_tokens[1] : DEFAULT_COMMENT_TOKENS
+    
+    # Build the header comment.
+    header = if comment_end.empty?
+               "#{comment_start}#{truncated_path}/#{filename}"
+             else
+               "#{comment_start}#{truncated_path}/#{filename}#{comment_end}"
+             end
+
+    # Build the footer comment.
+    footer = if comment_end.empty?
+               "#{comment_start}End of file: #{filename}"
+             else
+               "#{comment_start}End of file: #{filename}#{comment_end}"
+             end
+
+    # Append header, content, and footer (separated by newlines).
+    file_contents << "#{header}\n\n#{content}\n\n#{footer}\n\n"
   rescue => e
     $dz.error("Error Reading File", "Could not read #{file}: #{e.message}")
   end
@@ -99,9 +134,9 @@ def dragged
     "xml", "yaml", "yml", "json", "ini", "toml", "properties",
     "csv", "tsv", "sql", "rtf", "tex", "tsx", "less", "sass",
     "scss", "ps1", "bat", "cmd", "Dockerfile", "Makefile",
-    "gradle", "log", "jsx" # Extendable list of file extensions.
+    "gradle", "log", "jsx", "tsx" # Extendable list of file extensions.
   ]
-
+  
   $dz.begin("Copying files to clipboard...")
   $dz.determinate(true)
 
@@ -109,7 +144,7 @@ def dragged
   $items.each do |item|
     # Skip the item if it is in an ignored directory or is an ignored file.
     next if ignore_path?(item)
-
+    
     if File.directory?(item)
       process_directory(item, file_contents, text_types)
     else
@@ -118,13 +153,13 @@ def dragged
   end
 
   clipboard_content = file_contents.join("\n")
-
+  
   begin
     IO.popen('pbcopy', 'w') { |clipboard| clipboard.puts clipboard_content }
     $dz.finish("Files copied to clipboard")
   rescue => e
     $dz.error("Clipboard Error", "Failed to copy to clipboard: #{e.message}")
   end
-
+  
   $dz.url(false)
 end
