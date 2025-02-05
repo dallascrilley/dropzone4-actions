@@ -7,7 +7,7 @@
 # Events: Dragged
 # SkipConfig: Yes
 # RunsSandboxed: No
-# Version: 1.4
+# Version: 1.5
 # MinDropzoneVersion: 3.0
 
 # A list of regex patterns for directory or file names to ignore.
@@ -32,11 +32,36 @@ IGNORED_PATTERNS = [
 # Each element is an array where the first element is a regex that matches one or more file extensions,
 # and the second element is an array with the comment start and end tokens.
 COMMENT_TOKEN_GROUPS = [
-  [ /^(py|rb|sh)$/i,    ["# ", ""] ],
-  [ /^html?$/i,         ["<!-- ", " -->"] ],
-  [ /^(jsx|tsx|ts)$/i,  ["/* ", " */"] ]
-]
+  # Plain text files: use hash-based comment tokens.
+  [ /^(txt)$/i,                        ["# ", ""] ],
 
+  # Hash-based comments (e.g. Python, Ruby, Shell, Perl, PowerShell, YAML, TOML, .properties).
+  [ /^(py|rb|sh|pl|ps1|yaml|yml|toml|properties|txt)$/i, ["# ", ""] ],
+
+  # HTML-style comments (for HTML, XML, and Markdown files).
+  [ /^(html?|xml|md)$/i,                ["<!-- ", " -->"] ],
+
+  # C-style single-line comments (for Java, C, C++, C#, Swift, Kotlin, PHP, Less, Sass, SCSS, Gradle, Log files, and JavaScript).
+  [ /^(java|c|cpp|cs|swift|kt|php|less|sass|scss|gradle|log|js)$/i, ["// ", ""] ],
+
+  # Block comment style (for TypeScript and JSX files).
+  [ /^(jsx|tsx|ts)$/i,                 ["/* ", " */"] ],
+
+  # SQL-style comments.
+  [ /^(sql)$/i,                        ["-- ", ""] ],
+
+  # INI-style comments (commonly used in INI files).
+  [ /^(ini)$/i,                        ["; ", ""] ],
+
+  # Files with no official comment style (for JSON, CSV, TSV, or RTF we use a simple double-slash).
+  [ /^(json|csv|tsv|rtf)$/i,             ["// ", ""] ],
+
+  # LaTeX files use the percent sign.
+  [ /^(tex)$/i,                        ["% ", ""] ],
+
+  # Batch files use the REM keyword.
+  [ /^(bat|cmd)$/i,                    ["REM ", ""] ]
+]
 # Default comment tokens if no group matches.
 DEFAULT_COMMENT_TOKENS = ["// ", ""]
 
