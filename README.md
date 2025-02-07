@@ -56,6 +56,29 @@ This action supports a broad range of text and code files. In addition to the co
 2. The contents of the files are read, wrapped with header and footer comments (including the file’s relative path and name), and then concatenated together with a newline separating each file’s contents.
 3. If a file is unsupported or if an error occurs during processing (such as trying to read a binary file), an error message will appear.
 
+
+---
+
+### 3. Transcribe Audio to Clipboard
+This action allows users to quickly transcribe audio files, such as mp3, m4a, and wav, to text and copy the result to the clipboard. You will have to provide your own Deepgram API key.
+
+- **Name**: Transcribe Audio to Clipboard
+- **Description**: Transcribe audio files to text and copy the result to the clipboard.
+- **Handles**: Files
+- **Creator**: Dallas Crilley
+- **URL**: [dallascrilley.com](https://dallascrilley.com)
+- **Events**: Dragged
+- **SkipConfig**: Yes
+- **RunsSandboxed**: No
+- **Version**: 1.0
+- **MinDropzoneVersion**: 3.0
+
+#### Example Usage:
+
+1. Drag and drop one or more supported audio files onto the action.
+2. The audio files are transcribed to text and the result is copied to the clipboard.
+
+
 ## Installation
 
 To install these actions, follow these steps:
