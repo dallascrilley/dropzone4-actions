@@ -75,11 +75,40 @@ You will have to provide your own Deepgram API key and specify the path to the f
 - **Version**: 1.0
 - **MinDropzoneVersion**: 3.0
 
+### 4. Copy Git File Tree to Clipboard (Python)
+This action recursively show Git-tracked files in a tree, along with Python class/def/route details and requirements.txt contents. Click and drag a Git-tracked folder onto the action and it will copy it to the clipboard.
+
+Example output:
+.
+├── api
+│   ├── routers
+│   │   ├── __init__.py
+│   │   ├── accounts_router.py
+│   │   │   ├── def get_account_relationships
+│   │   │   └── route get /accounts/{intermedia_account_id}/relationships
+│   │   ├── connectwise
+│   │   │   ├── __init__.py
+│   │   │   ├── agreement_addition_removal_router.py
+│   │   │   │   ├── class RemoveAdditionsRequest
+│   │   │   │   ├── class RemoveAdditionsResponse
+│   │   │   │   └── route post /remove_agreement_additions
+
+- **Name**: Transcribe Audio and Video to Clipboard
+- **Description**: Transcribe audio and video files to text and copy the result to the clipboard.
+- **Handles**: Files
+- **Creator**: Dallas Crilley
+- **URL**: [dallascrilley.com](https://dallascrilley.com)
+- **Events**: Dragged
+- **SkipConfig**: Yes
+- **RunsSandboxed**: No
+- **Version**: 1.0
+- **MinDropzoneVersion**: 3.0
+
+
 #### Example Usage:
 
-1. Drag and drop one or more supported audio files onto the action.
-2. The audio files are transcribed to text and the result is copied to the clipboard.
-
+1. Drag and a Git-tracked folder with Python code onto the action.
+2. The .py files will be printed in a tree, along with the functions, classes, and routes it finds within. Non-python files will be included with their filenames but not the contents, with the exception of requirements.txt, since this is a useful file for context.
 
 ## Installation
 
