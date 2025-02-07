@@ -59,11 +59,13 @@ This action supports a broad range of text and code files. In addition to the co
 
 ---
 
-### 3. Transcribe Audio to Clipboard
-This action allows users to quickly transcribe audio files, such as mp3, m4a, and wav, to text and copy the result to the clipboard. You will have to provide your own Deepgram API key.
+### 3. Transcribe Audio and Video to Clipboard
+This action allows users to quickly transcribe audio and video files, such as mp4, mp3, m4a, and wav, to text and copy the result to the clipboard. 
 
-- **Name**: Transcribe Audio to Clipboard
-- **Description**: Transcribe audio files to text and copy the result to the clipboard.
+You will have to provide your own Deepgram API key and specify the path to the ffmpeg binary on your system.
+
+- **Name**: Transcribe Audio and Video to Clipboard
+- **Description**: Transcribe audio and video files to text and copy the result to the clipboard.
 - **Handles**: Files
 - **Creator**: Dallas Crilley
 - **URL**: [dallascrilley.com](https://dallascrilley.com)
