@@ -1,13 +1,15 @@
 # Dropzone Action Info
 # Name: Transcribe Audio to Clipboard
-# Description: Drop one or more audio files (MP3, WAV, M4A) or MP4 video files to send them to Deepgram for transcription. For MP4 files, the audio is extracted as a 128kbps MP3 before sending.
+# Description: Drop one or more audio files (MP3, WAV, M4A) or MP4 video files to send them to Deepgram for transcription.
+#              For MP4 files, the audio is extracted as a 128kbps MP3 before sending.
+#              At the start, you'll be prompted whether you want to save transcript files in the same directory as each input file.
 # Handles: Files
 # Creator: Dallas Crilley
 # URL: https://dallascrilley.com
 # Events: Dragged
 # SkipConfig: Yes
 # RunsSandboxed: No
-# Version: 1.1
+# Version: 1.2
 # MinDropzoneVersion: 3.0
 
 require 'json'
@@ -46,7 +48,7 @@ def transcribe_file(file)
     end
     
     # Use the temporary MP3 file for transcription.
-    file_path   = tmp_path
+    file_path    = tmp_path
     content_type = "audio/mp3"
     
   else
@@ -106,28 +108,55 @@ def transcribe_file(file)
 end
 
 def dragged
+  # Prompt the user at the beginning to decide if transcript files should be saved.
+  prompt_cmd = %q{osascript -e 'display dialog "Would you like to save transcript file(s) in the audio/video directory?" buttons {"No", "Yes"} default button "Yes" with title "Save Transcript Files?"'}
+  response = `#{prompt_cmd}`
+  save_files = response.include?("button returned:Yes")
+  
   $dz.begin("Sending file(s) to Deepgram for transcription...")
-  transcripts = []
-
+  
+  # We'll store transcript info as an array of hashes:
+  #   { :file => original file path, :transcript => transcript text }
+  transcripts_info = []
+  
   $items.each do |item|
     if File.file?(item)
       transcript = transcribe_file(item)
       if transcript && !transcript.strip.empty?
-        # Prepend the filename and newlines to the transcript.
-        filename = File.basename(item)
-        transcripts << "#{filename} Transcript\n\n#{transcript}"
+        transcripts_info << { file: item, transcript: transcript }
       end
     else
       $dz.error("Error", "Skipping non-file item: #{item}")
     end
   end
 
-  if transcripts.empty?
+  if transcripts_info.empty?
     $dz.error("Error", "No transcription was returned.")
   else
-    final_text = transcripts.join("\n\n")
+    # Build the final text for the clipboard.
+    final_text = transcripts_info.map do |info|
+      "#{File.basename(info[:file])} Transcript\n\n#{info[:transcript]}"
+    end.join("\n\n")
+    
     # Copy the transcript(s) to the clipboard.
     IO.popen('pbcopy', 'w') { |clipboard| clipboard.puts final_text }
+    
+    # If the user opted to save transcript files, write them to disk.
+    if save_files
+      transcripts_info.each do |info|
+        input_file = info[:file]
+        transcript_text = info[:transcript]
+        directory = File.dirname(File.expand_path(input_file))
+        base_name = File.basename(input_file, ".*")
+        output_path = File.join(directory, "#{base_name}.txt")
+        begin
+          File.write(output_path, transcript_text)
+        rescue => e
+          $dz.error("File Save Error", "Failed to save transcript file at #{output_path}:\n#{e}")
+        end
+      end
+    end
+    
     $dz.finish("Transcription copied to clipboard")
   end
 
