@@ -128,6 +128,34 @@ This action allows users to trim video files to specified start and end timestam
 3. The video will be trimmed in place, creating a new file with "_trimmed" appended to the original filename.
 4. If the file type is unsupported, an error message will be displayed.
 
+### 6. Create Thumbnail from Image
+This action creates standardized thumbnails from images by resizing and padding them to a 16:9 aspect ratio.
+
+- **Name**: Create Thumbnail from Image
+- **Description**: Uses ImageMagick to resize images so the longest side is max 1920, then pads to 1920×1080.
+- **Handles**: Files
+- **Creator**: Dallas Crilley
+- **URL**: [dallascrilley.com](https://dallascrilley.com)
+- **Events**: Dragged
+- **SkipConfig**: Yes
+- **RunsSandboxed**: No
+- **Version**: 1.3
+- **MinDropzoneVersion**: 3.0
+
+#### Supported Image Formats:
+- JPG, JPEG, PNG
+
+#### Example Usage:
+
+1. Drag and drop one or more supported image files onto the action.
+2. Enter a background color when prompted (e.g., black, white, red, or a hex code like #000000).
+3. The action will resize each image so its longest dimension is at most 1920 pixels while maintaining aspect ratio.
+4. It will then pad the image to exactly 1920×1080 (16:9 aspect ratio) with the specified background color.
+5. The resulting thumbnail will be saved in the same directory as the original with "_thumbnail@1920x1080" appended to the filename.
+
+#### Requirements:
+- ImageMagick must be installed (default path: /opt/homebrew/bin/magick)
+
 ## Installation
 
 To install these actions, follow these steps:
