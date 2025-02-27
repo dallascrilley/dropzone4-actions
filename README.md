@@ -53,7 +53,7 @@ This action supports a broad range of text and code files. In addition to the co
 #### Example Usage:
 
 1. Drag and drop one or more supported text/code files onto the action.
-2. The contents of the files are read, wrapped with header and footer comments (including the file’s relative path and name), and then concatenated together with a newline separating each file’s contents.
+2. The contents of the files are read, wrapped with header and footer comments (including the file's relative path and name), and then concatenated together with a newline separating each file's contents.
 3. If a file is unsupported or if an error occurs during processing (such as trying to read a binary file), an error message will appear.
 
 
@@ -86,12 +86,6 @@ Example output:
 │   │   ├── accounts_router.py
 │   │   │   ├── def get_account_relationships
 │   │   │   └── route get /accounts/{intermedia_account_id}/relationships
-│   │   ├── connectwise
-│   │   │   ├── __init__.py
-│   │   │   ├── agreement_addition_removal_router.py
-│   │   │   │   ├── class RemoveAdditionsRequest
-│   │   │   │   ├── class RemoveAdditionsResponse
-│   │   │   │   └── route post /remove_agreement_additions
 
 - **Name**: Transcribe Audio and Video to Clipboard
 - **Description**: Transcribe audio and video files to text and copy the result to the clipboard.
@@ -109,6 +103,30 @@ Example output:
 
 1. Drag and a Git-tracked folder with Python code onto the action.
 2. The .py files will be printed in a tree, along with the functions, classes, and routes it finds within. Non-python files will be included with their filenames but not the contents, with the exception of requirements.txt, since this is a useful file for context.
+
+### 5. Trim Video to Timestamp
+This action allows users to trim video files to specified start and end timestamps, modifying the files in place.
+
+- **Name**: Trim Video to Timestamp
+- **Description**: Prompts for start/end timestamps (HH:MM:SS or seconds) and trims each dropped video file in-place.
+- **Handles**: Files
+- **Creator**: Dallas Crilley
+- **URL**: [dallascrilley.com](https://dallascrilley.com)
+- **Events**: Dragged
+- **SkipConfig**: Yes
+- **RunsSandboxed**: No
+- **Version**: 1.0
+- **MinDropzoneVersion**: 3.0
+
+#### Supported Video Formats:
+- MP4, MOV, MKV, AVI, FLV
+
+#### Example Usage:
+
+1. Drag and drop a supported video file onto the action.
+2. Enter the start and end times when prompted.
+3. The video will be trimmed in place, creating a new file with "_trimmed" appended to the original filename.
+4. If the file type is unsupported, an error message will be displayed.
 
 ## Installation
 
